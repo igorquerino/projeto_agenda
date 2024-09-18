@@ -1,69 +1,63 @@
-const form = document.getElementById('form-atividade');
-let linhas = ''
-const atividades = [];
-const notas = [];
-const notaMinima = parseFloat(prompt('digite a nota minima:'));
+const form = document.getElementById("form-contato");
+const imgPerfil = '<img src="./images/Profile Circle.png" alt="perfil" />';
+const nomes = [];
+const telefones = [];
+let linhas = "";
 
-const imgAprovado = '<img src="/images/aprovado.png" alt="emoji festejando"/>'
-const imgReprovado = '<img src="/images/reprovado.png" alt="emoji triste"/>'
-
-const spanAprovado = '<span class = "resultado aprovado">Aprovado</span>'
-const spanReprovado = '<span class = "resultado reprovado">Reprovado</span>'
-
-form.addEventListener('submit', function(e){
-    e.preventDefault();
-    
-    addLinhas();
-    atualizaTabela();
-    atualizaMediaFinal();
-
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  adicionaLinha();
+  atualizaTabela();
 });
 
-function addLinhas(){
-    const inputNomeAtividade = document.getElementById('nome-atividade');
-    const inputNotaAtividade = document.getElementById('nota-atividade');
+function adicionaLinha() {
+  const inputNomeContato = document.getElementById("nome-contato");
+  const inputTelefone = document.getElementById("telefone");
 
-    
+  if (telefones.includes(inputTelefone.value)) {
+    alert(
+      `O telefone: ${inputTelefone.value} já está na sua lista de contatos!`
+    );
+  } else {
+    nomes.push(inputNomeContato.value);
+    telefones.push(inputTelefone.value);
 
-    if(atividades.includes(inputNomeAtividade.value)){
-        alert(`A atividade ${inputNomeAtividade.value} ja foi adcionada`)
-    }else{
+    let linha = "<tr>";
+    linha += `<td>${inputNomeContato.value}</td>`;
+    linha += `<td>${inputTelefone.value}</td>`;
+    linha += `<td><button class="delete" onclick="excluirContato(${
+      nomes.length - 1
+    })">Excluir</button></td>`;
+    linha += "</tr>";
 
-        atividades.push(inputNomeAtividade.value);
-        notas.push(parseFloat(inputNotaAtividade.value));
-
-        let linha = '<tr>';
-        linha += `<td>${inputNomeAtividade.value} </td>`;
-        linha += `<td>${inputNotaAtividade.value} </td>`;
-        linha += `<td>${inputNotaAtividade.value >= notaMinima ? imgAprovado : imgReprovado}</td>`;
-        linha += '<tr>'
-        
-        linhas += linha
-    }
-    inputNomeAtividade.value = '';
-    inputNotaAtividade.value = '';
+    linhas += linha;
+  }
+  // Limpa os campos de entrada
+  inputNomeContato.value = "";
+  inputTelefone.value = "";
 }
 
-function atualizaTabela(){
-    const corpoTabela = document.querySelector('tbody');
-    corpoTabela.innerHTML = linhas;
+function atualizaTabela() {
+  const corpoTabela = document.querySelector("tbody");
+  corpoTabela.innerHTML = linhas;
 }
 
-function atualizaMediaFinal(){
-    const mediaFinal =  calculaMediaFianl();
-
-    document.getElementById('media-final-valor').innerHTML = mediaFinal.toFixed(2);
-    document.getElementById('media-final-resultado').innerHTML = mediaFinal >= notaMinima ? spanAprovado : spanReprovado;
-
-
+function excluirContato(index) {
+  nomes.splice(index, 1);
+  telefones.splice(index, 1);
+  atualizarLinhas();
+  atualizaTabela();
 }
 
-function calculaMediaFianl(){
-    let somaNotas = 0;
-
-    for(i = 0; i< notas.length; i++){
-        somaNotas += notas[i];
-    }
-
-    return media = somaNotas / notas.length
+function atualizarLinhas() {
+  linhas = "";
+  for (let i = 0; i < nomes.length; i++) {
+    let linha = "<tr>";
+    linha += `<td>${imgPerfil}</td>`;
+    linha += `<td>${nomes[i]}</td>`;
+    linha += `<td>${telefones[i]}</td>`;
+    linha += `<td><button class="excluir-btn" onclick="excluirContato(${i})">Excluir</button></td>`;
+    linha += "</tr>";
+    linhas += linha;
+  }
 }
